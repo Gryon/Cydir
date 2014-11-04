@@ -31,7 +31,7 @@ public class GuiGlyph extends GuiButton {
 
 	public void drawGlyph(Minecraft minecraft, int mouseX, int mouseY) {
 		if (this.visible) {
-			FontRenderer fontRenderer = minecraft.fontRenderer;
+			FontRenderer fontRenderer = RuneFontRenderer.instance;
 
 			minecraft.getTextureManager().bindTexture(buttonTextures);
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -59,24 +59,10 @@ public class GuiGlyph extends GuiButton {
 				l = 0xffffe6d1;
 			}
 
-			int offset = 0;
-			for (int i = 0; i < displayString.length(); i++) {
-				String s = displayString.substring(i, i + 1);
-				int x = this.xPosition + this.width / 2
-						- fontRenderer.getStringWidth(displayString) / 2
-						+ offset;
-				int y = this.yPosition + (this.height - 8) / 2;
-				GL11.glPushMatrix();
-				GL11.glTranslatef(x, y, 0);
-				if (s.equals("Þ")) {
-					drawString(fontRenderer, s, 1, 1, (0xfcfcfc >> 2) | 0xff000000);
-					GL11.glScalef(1.2f, 1.2f, 0);
-					GL11.glTranslatef(0, -1, 0);
-				}
-				drawString(fontRenderer, s, 0, 0, l);
-				offset += fontRenderer.getStringWidth(s);
-				GL11.glPopMatrix();
-			}
+			int x = this.xPosition + this.width / 2
+					- fontRenderer.getStringWidth(displayString) / 2;
+			int y = this.yPosition + (this.height - 8) / 2;
+			drawString(fontRenderer, displayString, x, y, l);
 		}
 	}
 

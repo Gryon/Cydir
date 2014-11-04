@@ -1,9 +1,11 @@
 package me.zaboing.cydir.gui;
 
+import java.io.File;
+
+import me.zaboing.cydir.Spells;
 import me.zaboing.cydir.client.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.gui.GuiScreen;
 
 import org.lwjgl.BufferUtils;
@@ -17,10 +19,13 @@ public class GuiSpell extends GuiScreen {
 	public static final Cursor EMPTY_CURSOR;
 
 	public static boolean enableGlyphs;
-	
+
 	public String spell = new String();
+
+	private String target;
 	
-	
+	private boolean dirty = true;
+
 	@Override
 	public boolean doesGuiPauseGame() {
 		return false;
@@ -46,19 +51,34 @@ public class GuiSpell extends GuiScreen {
 	public void initGui() {
 		Minecraft.getMinecraft().mouseHelper.grabMouseCursor();
 		setCursor(EMPTY_CURSOR);
-		
-		buttonList.add(new GuiGlyph(0, width / 2 - 107, height / 2 - 60,
-				"Ek"));
-		buttonList.add(new GuiGlyph(0, width / 2 - 107, height / 2 - 35,
-				"Þú"));
-		buttonList.add(new GuiGlyph(0, width / 2 - 107, height / 2 - 10,
-				"Þik"));
-		buttonList.add(new GuiGlyph(0, width / 2 - 107, height / 2 + 15,
-				"Þeír"));
-		buttonList.add(new GuiGlyph(0, width / 2 - 107, height / 2 + 40,
-				"Oss"));
-		
+
 		super.initGui();
+	}
+
+	private void generateGlyphs() {
+		buttonList.clear();
+		int id = 0;
+		if (target == null) {
+			int y = -60;
+			for (String target : Spells.targetWords) {
+				buttonList.add(new GuiGlyph(id, width / 2 - 107, height / 2 + y,
+						target));
+				++id;
+				y += 25;
+			}
+		} else {
+			int x = 5;
+			int y = 5;
+			for (String other : Spells.otherWords) {
+				buttonList.add(new GuiGlyph(id, x, y, 78, 20, other));
+				++id;
+				x += 110;
+				if (x > width / 2) {
+					x = 5;
+					y += 25;
+				}
+			}
+		}
 	}
 
 	@Override
@@ -87,15 +107,24 @@ public class GuiSpell extends GuiScreen {
 	@Override
 	protected void actionPerformed(GuiButton button) {
 		spell += button.displayString + " ";
+		if (target == null) {
+			target = button.displayString;
+		}
+		dirty = true;
 	}
-	
+
 	@Override
 	public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_) {
-		super.drawScreen(p_73863_1_, p_73863_2_, p_73863_3_);
+		if (dirty) {
+			generateGlyphs();
+		}
 		
-		drawString(Minecraft.getMinecraft().fontRenderer, spell, width / 2 + 130, 20, 0xffffffff);
+		super.drawScreen(p_73863_1_, p_73863_2_, p_73863_3_);
+
+		drawString(RuneFontRenderer.instance, spell,
+				width / 2 + 15, 20, 0xffffffff);
 	}
-	
+
 	static {
 		Cursor emptyCursor = null;
 		try {
