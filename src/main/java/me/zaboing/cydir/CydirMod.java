@@ -1,6 +1,8 @@
 package me.zaboing.cydir;
 
+import me.zaboing.cydir.gui.GuiServer;
 import me.zaboing.cydir.gui.RuneFontRenderer;
+import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
@@ -21,6 +23,7 @@ public class CydirMod {
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
 		RuneFontRenderer.init();
 		Spells.loadWords();
+		MinecraftForge.EVENT_BUS.register(new GuiServer());
 //		try {
 //			Field f = FontRenderer.class.getDeclaredField("glyphWidth");
 //			f.setAccessible(true);

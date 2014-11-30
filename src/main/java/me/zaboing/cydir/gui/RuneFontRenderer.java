@@ -41,8 +41,7 @@ public class RuneFontRenderer extends FontRenderer {
 	static {
 		
 		Minecraft mc = Minecraft.getMinecraft();
-		instance = new RuneFontRenderer(mc.gameSettings, new ResourceLocation(
-				"cydir", "ascii_fixed.png"), mc.renderEngine, true);
+		instance = new RuneFontRenderer(mc.gameSettings, new ResourceLocation("textures/font/ascii.png"), mc.renderEngine, true);
 		((IReloadableResourceManager) mc.getResourceManager())
 				.registerReloadListener(instance);
 	}
